@@ -65,7 +65,7 @@ which is the current map of env vars on the host system. The root context "." re
 
 cat ids.hbs
 
-```
+```handlebars
 {{#each .}}
   {{Id}}
 {{/each}}
