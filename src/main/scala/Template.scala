@@ -4,7 +4,7 @@ import com.github.jknack.handlebars.{
   Context, Handlebars, Template => HandlebarsTemplate, ValueResolver
 }
 import tugboat.Docker
-import org.json4s.JArray
+import org.json4s.{ JArray, JValue }
 import org.json4s.native.JsonMethods._
 import scala.concurrent.{ Future, ExecutionContext }
 
