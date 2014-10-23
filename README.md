@@ -104,6 +104,6 @@ For these reasons porteurbars was born with the following goals in mind.
 - only be a template generator. providing a `watch` like facitly is more like an application which composes both a watch library and a template generation library. porteurbars fills the latter role. spliting these roles let's both be incrementally improved in isolation and let's thier utility be more useful in
 other contexts.
 
-An attempt was made to fix some of these issues with docker-gen but the `go` is not forte. Scala is fun, will work with anything also running on the JVM, and works well with my existing toolchain.
+An attempt was made to fix some of these issues with docker-gen but the `go` is not my forte. Scala is fun, will work with anything also running on the JVM, and works well with my existing toolchain.
 
 Doug Tangren (softprops) 2014
