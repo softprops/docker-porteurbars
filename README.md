@@ -46,7 +46,7 @@ val template = porteurbars.Template(
 
 At this point you have a compiled template. To apply docker information, simply `apply` it.
 
-```
+```scala
 val evalFuture: Future[String] = template()
 evalFuture.foreach(println)
 ```
@@ -81,7 +81,7 @@ Sometimes you can forget what docker can tell you about running containers. Shel
 such porteurbars defines an inspect helper that you can pass a reference to any json node provided in the context.
 
 ```bash
-cat template.hbs
+$ cat template.hbs
 ```
 
 ```handlebars
