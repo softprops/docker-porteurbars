@@ -6,7 +6,8 @@ test
   {{Name}}
   {{#each Config.Env}}
     {{.}}
+    {{#keyvalue .}}
+       {{key}} = {{value}}
+    {{/keyvalue }}
   {{/each}}
 {{/each}}
-
-{{{inspect .}}}

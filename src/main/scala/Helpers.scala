@@ -9,6 +9,22 @@ import org.json4s.native.JsonMethods.{ pretty, render }
 trait DockerHelpers {
   def inspect(obj: JValue): String =
     pretty(render(obj))
+
+  def kv(combined: String, options: Options) = keyvalue(combined, options)
+
+  def keyvalue(combined: String, options: Options): CharSequence = {
+    val (key, value) = combined.split("=", 2) match {
+      case Array(k)    => (k, "")
+      case Array(k, v) => (k, v)
+    }
+    val parent = options.context
+    val next = Context.newBuilder(
+      parent, Map("key" -> key, "value" -> value))
+     .build()
+    val out = options(options.fn, next)
+    next.destroy
+    out
+  }
 }
 
 object Helpers extends DockerHelpers {
@@ -37,7 +53,6 @@ object Helpers extends DockerHelpers {
 
   private def eachScalaIterable(
     it: Iterable[_], options: Options): String = {
-    println(s"given iterable $it")
     val sb = new StringBuilder()
     if (it.isEmpty) sb.append(options.inverse()) else {
       val parent = options.context

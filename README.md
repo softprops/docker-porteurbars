@@ -92,6 +92,23 @@ The template above, roughly equivalent to the output of `docker inspect <contain
 
 This helper is provided mainly for debugging purposes.
 
+#### keyvalue (kv)
+
+Sometimes docker represents a key/value pair as a single string "{key}={value}". This makes it awkward to reference one or the other from a template. For this reason porteurbars defines a `keyvalue` helper ( and also `kv` which is its alias ) which creates a new handlebars context with a "key" and "value" context which templates have easy access to.
+
+```bash
+$ cat kv.hbs
+```
+
+```handlebars
+{{#each .}}
+  {{#each Config.Env}}
+     {{#keyvalue .}}
+        key is {{key}} value is {{value}}
+     {{/keyvalue}}
+  {{/each}}
+{{/each}}
+```
 
 #### ect
 
