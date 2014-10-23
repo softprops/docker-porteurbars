@@ -99,13 +99,13 @@ More helpers will likely be added in the future but the goal is to define the mi
 
 ## why not?
 
-Inspiration for this library came out of frustration with the docker-gen cli. docker-gen is a cli, not a library, which limits is use within other libraries.
-docker-gen is more than just a template generator, its also a `watch` utility. This is useful but a coupled feature to the template generator cli. This also motivated the [docker-watch](github.com/softprops/docker-watch) library. docker-gen provides its own represtation of docker containers. If you want to access information docker exposes but which that representation doesnt not cover, you are out of luck. docker-gen's templates are authored in a `go` specfic templating language which is useful if you are only writing `go`. 
+Inspiration for this library came out of frustration with the docker-gen cli. docker-gen designed to be a is a cli, not a library, which limits its use within other libraries.
+docker-gen is more than just a template generator, its also a `watch` utility. This is a useful but coupled feature to the template generator cli. This also motivated the [docker-watch](github.com/softprops/docker-watch) library. docker-gen provides its own represtation of docker containers. If you want to access information docker exposes but which that representation doesn't not cover, you are out of luck. docker-gen's templates are authored in a `go` specfic templating language which is useful if you are used to only writing `go`. 
 
 For these reasons porteurbars was born with the following goals in mind.
 
 - be a library first, then a cli
-- templates should be authored in a flexible language-agnotic templating language ( handlebars first that bill well )
+- templates should be authored in a flexible language-agnotic templating language ( handlebars fits that bill well )
 - only be a template generator. providing a `watch` like facitly is more like an application which composes both a watch library and a template generation library. porteurbars fills the latter role. spliting these roles let's both be incrementally improved in isolation and let's thier utility be more useful in
 other contexts.
 
