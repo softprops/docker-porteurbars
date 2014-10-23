@@ -63,7 +63,9 @@ Out of the box, standard helpers like `each` and `if` are defined. porteurbars e
 All handlebars templates expect a "context" referring to the data being applied to the template. porteurbars provides a top level context for "Env",
 which is the current map of env vars on the host system. The root context "." refers to a list of _running_ docker containers.
 
-cat ids.hbs
+```bash
+$ cat ids.hbs
+```
 
 ```handlebars
 {{#each .}}
@@ -80,6 +82,9 @@ such porteurbars defines an inspect helper that you can pass a reference to any 
 
 ```bash
 cat template.hbs
+```
+
+```handlebars
 {{{inspect .}}}
 ```
 
