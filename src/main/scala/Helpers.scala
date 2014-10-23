@@ -1,17 +1,23 @@
 package porteurbars
 
-import com.github.jknack.handlebars.{ Context, Helper, Options }
+import com.github.jknack.handlebars.{ Context, Options }
 import com.github.jknack.handlebars.helper.{ EachHelper, IfHelper }
 import scala.collection.Iterable
-import org.json4s.JArray
+import org.json4s.{ JArray, JValue }
+import org.json4s.native.JsonMethods.{ pretty, render }
 
-object Helpers  {
+trait DockerHelpers {
+  def inspect(obj: JValue): String =
+    pretty(render(obj))
+}
+
+object Helpers extends DockerHelpers {
 
   /** overriding default `each` helper to support scala iterable things */
   def each(obj: Object, options: Options): CharSequence =
     obj match {
       case ary: JArray =>
-        eachJsonArray(ary, options)
+        eachScalaIterable(ary.arr, options)
       case  it: Iterable[_] =>
         eachScalaIterable(it, options)
       case _ =>
@@ -29,10 +35,9 @@ object Helpers  {
         IfHelper.INSTANCE(obj, options)
     }
 
-  private def eachJsonArray(ary: JArray, options: Options): String =
-    eachScalaIterable(ary.arr, options)
-
-  private def eachScalaIterable(it: Iterable[_], options: Options): String = {
+  private def eachScalaIterable(
+    it: Iterable[_], options: Options): String = {
+    println(s"given iterable $it")
     val sb = new StringBuilder()
     if (it.isEmpty) sb.append(options.inverse()) else {
       val parent = options.context

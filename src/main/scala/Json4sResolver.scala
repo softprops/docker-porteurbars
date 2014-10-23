@@ -6,18 +6,20 @@ import scala.collection.JavaConverters._
 import java.util.{ Collections => JCollections, Map => JMap, Set => JSet }
 
 object Json4sResolver extends ValueResolver {
-  private[this] val Index = """(\d+)""".r
+  private[this] val Digit = """(\d+)""".r
 
   def resolve(ctx: Object, name: String): Object =
     (ctx, name) match {
-      case (JArray(xs), Index(i)) if i.toInt < xs.size =>
+      case (JArray(xs), Digit(i)) =>
         val index = i.toInt
         if (index < xs.size) resolve(xs(index))
         else ValueResolver.UNRESOLVED
       case (JObject(fields), key) =>
         fields
-          .find { case (k, _) => k == key }
-          .map { case (_, v) => resolve(v) }
+          .collectFirst {
+            case (k, v) if k == key =>
+              resolve(v)
+          }
           .getOrElse {
             ValueResolver.UNRESOLVED
           }
