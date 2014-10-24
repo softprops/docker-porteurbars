@@ -35,14 +35,12 @@ $ docker inspect <container_id>
 ```
 
 Templates are parsed and evaluated using handlebars syntax. Handlebars is a [mustache](http://mustache.github.io/)-like templating language that provides an extensible API.
-This library uses [handlebars java](http://jknack.github.io/handlebars.java/) for template evaluation and rendering. If you would like to extend the set of built-in templating helpers for your own needs, you may do so by providing a custom compiler.
+This library uses [handlebars java](http://jknack.github.io/handlebars.java/) for template evaluation and rendering. If you would like to extend the set of built-in templating helpers for your own needs, you may do so using the `configure` method which takes the an instance of the current Handlebars compiler and returns a new Handlebars compiler.
 
 ```scala
 import porteurbars.Template
-val template = Template(
-  "path/to/template",
-  compiler = Template.compiler.registerHelpers(
-    MyCustomHelpers))
+val template = porteurbars.Template("path/to/template")
+  .configure(_.registerHelpers(MyCustomHelpers))
 ```
 
 At this point you have a compiled template. To apply docker information, simply call it's `apply` method.

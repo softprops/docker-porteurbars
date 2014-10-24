@@ -32,6 +32,9 @@ case class Template
   private[this] lazy val inspect =
     docker.containers.get(_)
 
+  def configure(update: Compiler => Compiler) =
+    copy(compiler = update(compiler))
+
   def apply(): Future[String] = {
     containers().flatMap { up =>
       Future.sequence(up.map { c =>
