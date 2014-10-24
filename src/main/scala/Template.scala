@@ -17,11 +17,13 @@ object Template {
       .resolver(resolvers:_*)      
       .build()
   val compiler: Handlebars = new Handlebars().registerHelpers(Helpers)
+  def apply(templatePath: String)(implicit ec: ExecutionContext): Template =
+    Template(templatePath, Docker())
 }
 
 case class Template
- (docker: Docker,
-  templatePath: String,
+  (templatePath: String,
+  docker: Docker,
   compiler: Handlebars = Template.compiler)
  (implicit val ec: ExecutionContext) {
   lazy val template: HandlebarsTemplate = compiler.compile(templatePath)
@@ -29,7 +31,7 @@ case class Template
     docker.containers.list
   private[this] lazy val inspect =
     docker.containers.get(_)
-  def render(inspected: JValue) = template(Template.newContext(inspected))
+
   def apply(): Future[String] = {
     containers().flatMap { up =>
       Future.sequence(up.map { c =>
@@ -37,4 +39,9 @@ case class Template
       })
     }.map(JArray(_)).map(render)
   }
+
+  def close() = docker.close()
+
+  private def render(inspected: JValue) =
+    template(Template.newContext(inspected))
 }

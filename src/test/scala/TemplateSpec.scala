@@ -9,14 +9,13 @@ import tugboat.Docker
 class TemplateSpec extends FunSpec {
   describe("template") {
     it ("should render") {
-      val docker = Docker()
-      val template = Template(docker, "test")
+      val template = Template("test")
       val eval = template()
       try {
         val out = Await.result(eval, Duration.Inf)
         println(out)
         assert(out.nonEmpty === true)
-      } finally docker.close()
+      } finally template.close()
     }
   }
 }
