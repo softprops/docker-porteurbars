@@ -3,12 +3,15 @@ package porteurbars
 import com.github.jknack.handlebars.{ Context, Options }
 import com.github.jknack.handlebars.helper.{ EachHelper, IfHelper }
 import scala.collection.Iterable
-import org.json4s.{ JArray, JValue }
+import org.json4s.{ JArray, JObject, JValue }
 import org.json4s.native.JsonMethods.{ pretty, render }
 
 trait DockerHelpers {
   def inspect(obj: JValue): String =
     pretty(render(obj))
+
+  def truncateId(id: String): String =
+    id.take(12)
 
   def kv(combined: String, options: Options) = keyvalue(combined, options)
 
@@ -34,6 +37,8 @@ object Helpers extends DockerHelpers {
     obj match {
       case ary: JArray =>
         eachScalaIterable(ary.arr, options)
+      case JObject(fields) =>
+        eachNamed(fields, options)
       case  it: Iterable[_] =>
         eachScalaIterable(it, options)
       case _ =>
@@ -51,6 +56,22 @@ object Helpers extends DockerHelpers {
         IfHelper.INSTANCE(obj, options)
     }
 
+  private def eachNamed(
+    named: Iterable[(String, _)], options: Options): String = {
+    val sb = new StringBuilder()
+    if (named.isEmpty) sb.append(options.inverse()) else {
+      val parent = options.context
+      for ((key, value) <- named) {
+        val ctx = Context.newBuilder(parent, value)
+          .combine("@key", key)
+          .build()
+        sb.append(options(options.fn, ctx))
+        ctx.destroy()
+      }
+    }
+    sb.toString
+  }
+
   private def eachScalaIterable(
     it: Iterable[_], options: Options): String = {
     val sb = new StringBuilder()
@@ -59,7 +80,7 @@ object Helpers extends DockerHelpers {
       def append(i: Int, iter: Iterator[_]): Unit =
         if (iter.hasNext) {
           val even = i % 2 == 0
-          val ctx: Context = Context.newBuilder(parent, iter.next)
+          val ctx = Context.newBuilder(parent, iter.next)
             .combine("@index", i)
             .combine("@first", if (i == 0) "first" else "")
             .combine("@last", if (!iter.hasNext) "last" else "")
@@ -67,7 +88,7 @@ object Helpers extends DockerHelpers {
             .combine("@even", if (even) "even" else "")
             .build()
           sb.append(options(options.fn, ctx))
-          ctx.destroy
+          ctx.destroy()
           append(i + 1, iter)
         }
       append(0, it.iterator)
