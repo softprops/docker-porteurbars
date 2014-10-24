@@ -3,6 +3,7 @@ package porteurbars
 import com.github.jknack.handlebars.{
   Context, Handlebars, Template => HandlebarsTemplate, ValueResolver
 }
+import com.github.jknack.handlebars.io.FileTemplateLoader
 import tugboat.Docker
 import org.json4s.{ JArray, JValue }
 import org.json4s.native.JsonMethods._
@@ -16,7 +17,8 @@ object Template {
       .combine("Env", sys.env)
       .resolver(resolvers:_*)      
       .build()
-  val compiler: Handlebars = new Handlebars().registerHelpers(Helpers)
+  val compiler: Handlebars =
+    new Handlebars(new FileTemplateLoader("")).registerHelpers(Helpers)
   def apply(templatePath: String)(implicit ec: ExecutionContext): Template =
     Template(templatePath, Docker())
 }
