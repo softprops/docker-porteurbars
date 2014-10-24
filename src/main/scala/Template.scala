@@ -32,7 +32,7 @@ case class Template
   private[this] lazy val inspect =
     docker.containers.get(_)
 
-  def configure(update: Compiler => Compiler) =
+  def configure(update: Handlebars => Handlebars) =
     copy(compiler = update(compiler))
 
   def apply(): Future[String] = {
