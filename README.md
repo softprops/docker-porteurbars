@@ -54,7 +54,7 @@ The result of an applied template is a Scala standard library [Future](http://ww
 
 ### authoring templates
 
-The beauty of porteurbars are that porteurbars templates are __just plain handlebars templates__. Anything you can do in handlebars you can do with porteurbars.
+The beauty of porteurbars is that porteurbars templates are __just plain handlebars templates__. Anything you can do in handlebars you can do with porteurbars.
 Anything you can't do with porteurbars, you can easily add by extending it with handlebars helpers.
 
 Out of the box, standard handlebars helpers like `each` and `if` are defined. porteurbars extends the standard set of helpers with a set useful for docker specific tasks.
