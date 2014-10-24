@@ -111,6 +111,20 @@ $ cat container_envs.hbs
 {{/each}}
 ```
 
+#### truncateId
+
+It's a common practice for docker tooling to show the short, truncated for of identifiers. porteurbars provides a handlebars helper that does just this. 
+
+```bash
+$ cat short_ids.hbs
+```
+
+```handbars
+{{#each .}}
+  {{ truncateId Id }}
+{{/each}}
+```
+
 #### ect
 
 More helpers will likely be added in the future but the goal is to define the minimal set required to make porteurbars useful to a general audience
