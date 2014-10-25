@@ -17,7 +17,7 @@ trait DockerHelpers {
     str.replaceFirst("/", "")
 
   /** parses port into components @port and @type (tcp or udp) */
-  def parsePort(str: String, options: Options): CharSequence = {
+  def portspec(str: String, options: Options): CharSequence = {
     val sb = new StringBuilder()
     if (str.isEmpty) sb.append(options.inverse()) else {
       val parent = options.context
@@ -37,7 +37,7 @@ trait DockerHelpers {
   }
 
   /** parses docker image string into @registry @repo and @tag components */
-  def parseImage(str: String, options: Options): CharSequence = {
+  def imagespec(str: String, options: Options): CharSequence = {
     val sb = new StringBuilder()
     if (str.isEmpty) sb.append(options.inverse()) else {
       val parent = options.context
@@ -70,8 +70,10 @@ trait DockerHelpers {
     }
     val parent = options.context
     val next = Context.newBuilder(
-      parent, Map("key" -> key, "value" -> value))
-     .build()
+      parent, combined)
+      .combind("@key", key)
+      .combine("@value", value)
+      .build()
     val out = options(options.fn, next)
     next.destroy
     out

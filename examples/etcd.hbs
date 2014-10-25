@@ -2,11 +2,9 @@
 
 # Genenerated by {{ Env.USER }}
 
-{{{inspect .}}}
-
 {{#each .}} {{#each NetworkSettings.Ports }}
 # {{ stripSlash ../Name }}
-curl -X PUT -q -d value="{{ ../NetworkSettings.IPAddress }}:{{#parsePort @key }}{{ @port }}{{/parsePort}}" \
+curl -X PUT -q -d value="{{ ../NetworkSettings.IPAddress }}:{{#portspec @key }}{{ @port }}{{/portspec}}" \
                -d ttl=15 \
-      http://127.0.0.1:4001/v2/keys/backends/{{#parseImage ../Config.Image }}{{ @repo }}{{/parseImage}}/{{ truncateId ../Id }}
+      http://127.0.0.1:4001/v2/keys/backends/{{#imagespec ../Config.Image }}{{ @repo }}{{/imagespec}}/{{ truncateId ../Id }}
 {{/each }} {{/each}}

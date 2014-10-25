@@ -95,7 +95,7 @@ This helper is provided mainly for debugging purposes, but feel free to be creat
 
 #### keyvalue (kv)
 
-Sometimes docker represents key/value pairs as a single string in the form "{key}={value}". This makes it awkward to reference one or the other from a template. For this reason, porteurbars defines a `keyvalue` helper ( and also `kv` which is its alias ) which creates a new handlebars context with a "key" and "value" context which templates have easy access to.
+Sometimes docker represents key/value pairs as a single string in the form "{key}={value}". This makes it awkward to reference one or the other from a template. For this reason, porteurbars defines a `keyvalue` helper ( and also `kv` which is its alias ) which creates a new handlebars context, preserving the original keyval string combined with a "@key" and "@value" attribute which templates have easy access to.
 
 ```bash
 $ cat container_envs.hbs
@@ -105,7 +105,7 @@ $ cat container_envs.hbs
 {{#each .}}
   {{#each Config.Env}}
      {{#keyvalue .}}
-        key is {{key}} value is {{value}}
+        key is {{@key}} value is {{@value}}
      {{/keyvalue}}
   {{/each}}
 {{/each}}
