@@ -20,8 +20,15 @@ object Template {
   val compiler: Handlebars =
     new Handlebars(new FileTemplateLoader("")).registerHelpers(Helpers)
 
-  def apply[T: Input](in: T)(implicit ec: ExecutionContext): Template =
-    Template(implicitly[Input[T]].contents(in), Docker())
+  def apply[T: Input]
+   (in: T)
+   (implicit ec: ExecutionContext): Template =
+    new Template(implicitly[Input[T]].contents(in), Docker())
+
+  def apply[T: Input]
+   (in: T, docker: Docker)
+   (implicit ec: ExecutionContext): Template =
+    Template(implicitly[Input[T]].contents(in), docker)
 }
 
 case class Template
