@@ -71,7 +71,7 @@ trait DockerHelpers {
     val parent = options.context
     val next = Context.newBuilder(
       parent, combined)
-      .combind("@key", key)
+      .combine("@key", key)
       .combine("@value", value)
       .build()
     val out = options(options.fn, next)
