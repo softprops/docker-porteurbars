@@ -12,9 +12,9 @@ The core interface you'll work with is a `porteurbars.Template`. Creating a new 
 
 ```scala
 import scala.concurrent.ExecutionContext.Implicits.global
-
+import java.io.File
 // create a reference to a compiled template
-val template = porteurbars.Template("path/to/template")
+val template = porteurbars.Template(new File("path/to/template"))
 ```
 
 By default, and instance of a [tugboat.Docker](http://github.com/softprops/tugboat#readme) is used to communicate with Docker to resolve 
@@ -23,8 +23,12 @@ about resolving a host to bind to.
 If these defaults do not work for you, simply pass in your own instance of a Docker.
 
 ```scala
-val template = porteurbars.Template(
-  "path/to/template", Docker(myCustomHost))
+import porteurbars.Template
+import java.io.File
+import tugboat.Docker
+
+val template = Template(
+  new File("path/to/template"), Docker(myCustomHost))
 ```
 
 Porteurbars templates are provided with container information in the same json structure docker returns if you
@@ -39,7 +43,8 @@ This library uses [handlebars java](http://jknack.github.io/handlebars.java/) fo
 
 ```scala
 import porteurbars.Template
-val template = porteurbars.Template("path/to/template")
+import java.io.File
+val template = Template(new File("path/to/template"))
   .configure(_.registerHelpers(MyCustomHelpers))
 ```
 
