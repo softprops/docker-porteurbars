@@ -19,16 +19,18 @@ object Template {
       .build()
   val compiler: Handlebars =
     new Handlebars(new FileTemplateLoader("")).registerHelpers(Helpers)
-  def apply(templatePath: String)(implicit ec: ExecutionContext): Template =
-    Template(templatePath, Docker())
+
+  def apply[T: Input](in: T)(implicit ec: ExecutionContext): Template =
+    Template(implicitly[Input[T]].contents(in), Docker())
 }
 
 case class Template
-  (templatePath: String,
+ (contents: String,
   docker: Docker,
   compiler: Handlebars = Template.compiler)
  (implicit val ec: ExecutionContext) {
-  lazy val template: HandlebarsTemplate = compiler.compile(templatePath)
+  lazy val template: HandlebarsTemplate =
+    compiler.compileInline(contents)
   private[this] lazy val containers =
     docker.containers.list
   private[this] lazy val inspect =
