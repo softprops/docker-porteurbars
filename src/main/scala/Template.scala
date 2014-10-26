@@ -10,6 +10,8 @@ import scala.concurrent.{ Future, ExecutionContext }
 import tugboat.Docker
 
 object Template {
+  type Filter = JValue => Boolean
+
   val compiler: Handlebars =
     new Handlebars(new FileTemplateLoader("")).registerHelpers(Helpers)
 
@@ -37,7 +39,7 @@ case class Template
  (contents: String,
   docker: Docker,
   compiler: Handlebars = Template.compiler,
-  filter: Option[JValue => Boolean] = None)
+  filter: Option[Template.Filter] = None)
  (implicit val ec: ExecutionContext) extends Filters {
   lazy val template: HandlebarsTemplate =
     compiler.compileInline(contents)
@@ -49,11 +51,12 @@ case class Template
   /** @return a rendered template applied with container information from all
    *          running containers */
   def apply(): Future[String] = {
+    val only: Template.Filter = filter.getOrElse(Function.const(true))
     containers().flatMap { up =>
       Future.sequence(up.map { c =>
         inspect(c.id)(dispatch.as.String).map(parse(_))
       })
-    }.map(JArray(_)).map(render)
+    }.map { cx => JArray(cx.filter(only)) }.map(render)
   }
 
   /** @return a new template instance configured to use an updated
