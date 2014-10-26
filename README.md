@@ -80,6 +80,15 @@ which holds the current map of env vars on the host system. The root context "."
 
 The template above would print out the "Id" of each running container.
 
+
+Template instances may also be filtered by a set of preconditions. using the `filter` method. This method accepts a function which taks the json from a containers inspection and returns true if the container should be include in the template context or false.
+
+```scala
+template.filter(json => only(json))
+```
+
+For convenience template instances define two precomposed template filters `Template.exposed` which will include only those containers with exposed ports, and `Template.published` which will include only those containers with exposed ports published to the host.
+
 #### inspect
 
 Sometimes you may forget what's inside the container json docker provides for you. Shelling out to `$ docker inspect <container_id>` is a common practice. As

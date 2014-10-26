@@ -36,8 +36,9 @@ object Template {
 case class Template
  (contents: String,
   docker: Docker,
-  compiler: Handlebars = Template.compiler)
- (implicit val ec: ExecutionContext) {
+  compiler: Handlebars = Template.compiler,
+  filter: Option[JValue => Boolean] = None)
+ (implicit val ec: ExecutionContext) extends Filters {
   lazy val template: HandlebarsTemplate =
     compiler.compileInline(contents)
   private[this] lazy val containers =
@@ -59,6 +60,12 @@ case class Template
    *          handlebars compiler */
   def configure(update: Handlebars => Handlebars) =
     copy(compiler = update(compiler))
+
+  /** filters each running container's json information to determine which
+   *  running containers will be applied to the template */
+  def filter(pred: JValue => Boolean) =
+    copy(filter = filter.map(filt => { jv: JValue => filt(jv) && pred(jv) })
+                        .orElse(Some(pred)))
 
   /** release underlying docker connection resources. this should only
    *  be called once for disposal */
