@@ -19,6 +19,16 @@ import porteurbars.Template
 val template = Template(new File("path/to/template.hbs"))
 ```
 
+You can also create a Template instance directly from the string source, an input stream or a [URL](http://docs.oracle.com/javase/7/docs/api/java/net/URL.html)
+
+```scala
+import scala.concurrent.ExecutionContext.Implicits.global
+import porteurbars.Template
+val sourced = Template("{{{inspect .}}}")
+val streamed = Template(inputStream)
+val urld = Template(myUrl)
+```
+
 By default, and instance of a [tugboat.Docker](http://github.com/softprops/tugboat#readme) is used to communicate with Docker to resolve 
 information about containers running on the current host. This `tugboat.Docker` instance will attempt to make some intelligent choices
 about resolving a host to bind to.
