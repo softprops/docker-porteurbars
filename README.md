@@ -11,10 +11,12 @@ Porteurbars is a library for rendering [handlebars](http://handlebarsjs.com/) te
 The core interface you'll work with is a `porteurbars.Template`. Creating a new template is simple. 
 
 ```scala
-import scala.concurrent.ExecutionContext.Implicits.global
 import java.io.File
+import scala.concurrent.ExecutionContext.Implicits.global
+import porteurbars.Template
+
 // create a reference to a compiled template
-val template = porteurbars.Template(new File("path/to/template"))
+val template = Template(new File("path/to/template.hbs"))
 ```
 
 By default, and instance of a [tugboat.Docker](http://github.com/softprops/tugboat#readme) is used to communicate with Docker to resolve 
@@ -28,7 +30,8 @@ import java.io.File
 import tugboat.Docker
 
 val template = Template(
-  new File("path/to/template"), Docker(myCustomHost))
+  new File("path/to/template.hbs"),
+  Docker(myCustomHost))
 ```
 
 Porteurbars templates are provided with container information in the same json structure docker returns if you
@@ -44,7 +47,7 @@ This library uses [handlebars java](http://jknack.github.io/handlebars.java/) fo
 ```scala
 import porteurbars.Template
 import java.io.File
-val template = Template(new File("path/to/template"))
+val template = Template(new File("path/to/template.hbs"))
   .configure(_.registerHelpers(MyCustomHelpers))
 ```
 
