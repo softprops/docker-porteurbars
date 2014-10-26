@@ -87,7 +87,7 @@ trait ScalaHelpers {
   def each(obj: Object, options: Options): CharSequence =
     obj match {
       case  it: Iterable[_] =>
-        eachScalaIterable(it, options)
+        eachIterable(it, options)
       case _ =>
         EachHelper.INSTANCE(obj, options)
     }
@@ -117,7 +117,7 @@ trait ScalaHelpers {
     sb.toString
   }
 
-  protected def eachScalaIterable(
+  protected def eachIterable(
     it: Iterable[_], options: Options): String = {
     val sb = new StringBuilder()
     if (it.isEmpty) sb.append(options.inverse()) else {
@@ -147,7 +147,7 @@ trait Json4sHelpers extends ScalaHelpers {
   override def each(obj: Object, options: Options): CharSequence =
     obj match {
       case ary: JArray =>
-        eachScalaIterable(ary.arr, options)
+        eachIterable(ary.arr, options)
       case JObject(fields) =>
         eachNamed(fields, options)
       case _ =>
