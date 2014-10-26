@@ -159,8 +159,6 @@ trait Json4sHelpers extends ScalaHelpers {
     obj match {
       case JArray(ary) =>
         `if`(ary, options)
-      case it: Iterable[_] =>
-        if (it.isEmpty) options.inverse() else options.fn()
       case _ =>
         super.`if`(obj, options)
     }
