@@ -140,7 +140,7 @@ The following template should print out these components of each of the running 
 
 #### portspec
 
-Docker ports can optionally define a type, typically `tcp` or `udp`, by annotation an integer with `/{type}`. Porteurbars defines a `portspec` helper
+Docker ports can optionally define a type, typically `tcp` or `udp`, by annotating an integer with `/{type}`. Porteurbars defines a `portspec` helper
 that parses this information out of ports into a handlebars context which exposes meta attributes `@port` and `@type`.
 
 ```handlebars
