@@ -19,16 +19,16 @@ object Input {
       def contents(in: String): String = in
     }
 
-  implicit val utf8URL: Input[URL] =
+  implicit val utf8url: Input[URL] =
     new Input[URL] {
       def contents(in: URL): String = 
-        fromURL(in, utf8)
+        url.contents(in, utf8)
     }
 
-  implicit val EncodedURL: Input[(URL, Charset)] =
+  implicit val url: Input[(URL, Charset)] =
     new Input[(URL, Charset)] {
       def contents(in: (URL, Charset)): String =
-        fromURL(in._1, in._2)
+        io.Source.fromURL(in._1)(io.Codec(in._2)).mkString
     }
 
   implicit val file: Input[File] =
@@ -42,7 +42,4 @@ object Input {
       def contents(in: InputStream): String =
         io.Source.fromInputStream(in).mkString
     }
-
-  private def fromURL(url: URL, charset: Charset): String =
-    io.Source.fromURL(url)(io.Codec(charset)).mkString
 }
