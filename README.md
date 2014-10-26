@@ -72,10 +72,6 @@ Out of the box, standard handlebars helpers like `each` and `if` are defined. po
 All handlebars templates expect a "context", which refers to the data being applied to the template. porteurbars provides a top level context name "Env",
 which holds the current map of env vars on the host system. The root context "." refers to a list of _running_ docker containers.
 
-```bash
-$ cat container_ids.hbs
-```
-
 ```handlebars
 {{#each .}}
   {{Id}}
@@ -89,10 +85,6 @@ The template above would print out the "Id" of each running container.
 Sometimes you may forget what's inside the container json docker provides for you. Shelling out to `$ docker inspect <container_id>` is a common practice. As
 such, porteurbars defines an `inspect` handlebars helper which you can pass any reference to a json node provided in the context.
 
-```bash
-$ cat inspected_containers.hbs
-```
-
 ```handlebars
 {{{inspect .}}}
 ```
@@ -105,10 +97,6 @@ This helper is provided mainly for debugging purposes, but feel free to be creat
 
 Sometimes docker represents key/value pairs as a single string in the form "{key}={value}". This makes it awkward to reference one or the other from a template. For this reason, porteurbars defines a `keyvalue` helper ( and also `kv` which is its alias ) which creates a new handlebars context, preserving the original keyval string combined with a "@key" and "@value" attribute which templates have easy access to.
 
-```bash
-$ cat container_envs.hbs
-```
-
 ```handlebars
 {{#each .}}
   {{#each Config.Env}}
@@ -119,15 +107,44 @@ $ cat container_envs.hbs
 {{/each}}
 ```
 
-#### truncateId
+#### imagespec
 
-It's a common practice for docker tooling to show the short, truncated for of identifiers. porteurbars provides a handlebars helper that does just this. 
+Docker image names are typically composed of three parts, two of which are optional in the form below.
 
-```bash
-$ cat short_ids.hbs
+```
+[registry/]repository[:tag]
 ```
 
-```handbars
+To make it simpler to reference the individual parts of this image spec, porteurbars provides a `imagespec` helper
+that parses in image name into a handlebars context which exposes the specific parts as meta attributes `@registry`, `@repo`, and
+`@tag`.
+
+The following template should print out these components of each of the running containers
+
+```handlebars
+{{#each .}}
+  {{imagespec Config.Image}}
+    registry {{ @registry }} repository {{ @repo }} tag {{ @tag }}
+  {{/imagespec}}
+{{/each}}
+```
+
+#### portspec
+
+Docker ports can optionally define a type, typically `tcp` or `udp`, by annotation an integer with `/{type}`. Porteurbars defines a `portspec` helper
+that parses this information out of ports into a handlebars context which exposes meta attributes `@port` and `@type`.
+
+```handlebars
+{{#each .}} {{#each NetworkSettings.Ports }}
+  container {{ ../Id }} - {{#portspec @key }} port {{ @port }} type {{ @type }} {{/portspec}}
+{{/each}} {{/each}}
+```
+
+#### truncateId
+
+It's a common practice for docker tooling to show the short, truncated form of container identifiers. Porteurbars provides a handlebars helper that does just this.
+
+```handlebars
 {{#each .}}
   {{ truncateId Id }}
 {{/each}}
