@@ -159,7 +159,7 @@ More helpers will likely be added in the future but the goal is to define the mi
 Inspiration for this library came out of frustration with the docker-gen cli. docker-gen was a great idea, but a few things didn't sit well with me.
 
 docker-gen designed to be a cli, not a library, which limits its use within other libraries.
-docker-gen is more than just a template generator, it's also a `watch` utility. This is an interesting but coupled feature to the template generator cli. This also motivated the [docker-watch](github.com/softprops/docker-watch) library. docker-gen provides its own representation of docker containers. If you want to access information docker exposes but which that representation doesn't not cover, you are out of luck. docker-gen's templates are authored in a `go` specific templating language which is convenient if you are used to only writing `go`. I am not.
+docker-gen is more than just a template generator, it's also a `watch` utility. This is an interesting but coupled feature to the template generator cli. This also motivated the [docker-watch](http://github.com/softprops/docker-watch) library. docker-gen provides its own representation of docker containers. If you want to access information docker exposes but which that representation doesn't not cover, you are out of luck. docker-gen's templates are authored in a `go` specific templating language which is convenient if you are used to only writing `go`. I am not.
 
 For these reasons porteurbars was born with the following goals in mind.
 
