@@ -6,6 +6,7 @@ import scala.collection.Iterable
 import org.json4s.{ JArray, JObject, JValue }
 import org.json4s.native.JsonMethods.{ pretty, render }
 
+/** docker specific handlebars helpers*/
 trait DockerHelpers {
   def inspect(obj: JValue): String =
     pretty(render(obj))
@@ -79,15 +80,12 @@ trait DockerHelpers {
   }
 }
 
-object Helpers extends DockerHelpers {
+/** scala specific handlebar helpers */
+trait ScalaHelpers {
 
   /** overriding default `each` helper to support scala iterable things */
   def each(obj: Object, options: Options): CharSequence =
     obj match {
-      case ary: JArray =>
-        eachScalaIterable(ary.arr, options)
-      case JObject(fields) =>
-        eachNamed(fields, options)
       case  it: Iterable[_] =>
         eachScalaIterable(it, options)
       case _ =>
@@ -97,15 +95,13 @@ object Helpers extends DockerHelpers {
   /** overriding default `if` helper to support scala falsy things */
   def `if`(obj: Object, options: Options): CharSequence =
     obj match {
-      case JArray(ary) =>
-        `if`(ary, options)
       case it: Iterable[_] =>
         if (it.isEmpty) options.inverse() else options.fn()
       case _ =>
         IfHelper.INSTANCE(obj, options)
     }
 
-  private def eachNamed(
+  protected def eachNamed(
     named: Iterable[(String, _)], options: Options): String = {
     val sb = new StringBuilder()
     if (named.isEmpty) sb.append(options.inverse()) else {
@@ -121,7 +117,7 @@ object Helpers extends DockerHelpers {
     sb.toString
   }
 
-  private def eachScalaIterable(
+  protected def eachScalaIterable(
     it: Iterable[_], options: Options): String = {
     val sb = new StringBuilder()
     if (it.isEmpty) sb.append(options.inverse()) else {
@@ -145,3 +141,29 @@ object Helpers extends DockerHelpers {
     sb.toString()
   }
 }
+
+/** json4s specific handlebar helpers */
+trait Json4sHelpers extends ScalaHelpers {
+  override def each(obj: Object, options: Options): CharSequence =
+    obj match {
+      case ary: JArray =>
+        eachScalaIterable(ary.arr, options)
+      case JObject(fields) =>
+        eachNamed(fields, options)
+      case _ =>
+        super.each(obj, options)
+    }
+
+  /** overriding default `if` helper to support scala falsy things */
+  override def `if`(obj: Object, options: Options): CharSequence =
+    obj match {
+      case JArray(ary) =>
+        `if`(ary, options)
+      case it: Iterable[_] =>
+        if (it.isEmpty) options.inverse() else options.fn()
+      case _ =>
+        super.`if`(obj, options)
+    }
+}
+
+object Helpers extends Json4sHelpers with DockerHelpers
