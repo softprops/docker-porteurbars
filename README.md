@@ -183,7 +183,7 @@ docker-gen is more than just a template generator, it's also a `watch` utility. 
 For these reasons porteurbars was born with the following goals in mind.
 
 - be a library first, then a cli second
-- templates should be authored in a flexible language-agnotic templating language ( handlebars fits that bill well )
+- templates should be authored in a flexible language-agnostic templating language ( handlebars fits that bill well )
 - focus on one thing. providing the `watch`-like facility made docker-gen feel like an application which composes both a watch library and a template generation library. porteurbars fills the latter role. splitting these roles into separate libraries let's both be incrementally improved in isolation and let's their utility be useful in other contexts.
 
 An attempt was made to fix some of these issues with docker-gen but `go` is not my forte.
