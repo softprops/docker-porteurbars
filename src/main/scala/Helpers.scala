@@ -21,12 +21,11 @@ trait DockerHelpers {
     val sb = new StringBuilder()
     if (str.isEmpty) sb.append(options.inverse()) else {
       val parent = options.context
-      val ctxBuilder = Context.newBuilder(parent, str)
       val (port, typ) = str.split("/", 2) match {
         case Array(port, typ) => (port, typ)
         case Array(port) => (port, "tcp")
       }
-      val ctx = ctxBuilder
+      val ctx = Context.newBuilder(parent, str)
         .combine("@port", port)
         .combine("@type", typ)
         .build()
