@@ -45,6 +45,8 @@ case class Template
   private[this] lazy val inspect =
     docker.containers.get(_)
 
+  /** @return a rendered template applied with container information from all
+   *          running containers */
   def apply(): Future[String] = {
     containers().flatMap { up =>
       Future.sequence(up.map { c =>
@@ -53,11 +55,16 @@ case class Template
     }.map(JArray(_)).map(render)
   }
 
+  /** @return a new template instance configured to use an updated
+   *          handlebars compiler */
   def configure(update: Handlebars => Handlebars) =
     copy(compiler = update(compiler))
 
+  /** release underlying docker connection resources. this should only
+   *  be called once for disposal */
   def close() = docker.close()
 
-  private def render(inspected: JValue) =
+  /** renders a template directly from a json ast */
+  def render(inspected: JValue) =
     template(Template.newContext(inspected))
 }
