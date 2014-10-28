@@ -18,15 +18,15 @@ object Template {
   val resolvers: Array[ValueResolver] =
     Array(Json4sResolver, ScalaResolver) ++ ValueResolver.VALUE_RESOLVERS
 
-  def apply[T: Input]
+  def apply[T: Source]
    (in: T)
    (implicit ec: ExecutionContext): Template =
-    new Template(implicitly[Input[T]].contents(in), Docker())
+    new Template(Source[T].contents(in), Docker())
 
-  def apply[T: Input]
+  def apply[T: Source]
    (in: T, docker: Docker)
    (implicit ec: ExecutionContext): Template =
-    Template(implicitly[Input[T]].contents(in), docker)
+    Template(Source[T].contents(in), docker)
 
   def newContext(obj: Object) =
     Context.newBuilder(obj)
