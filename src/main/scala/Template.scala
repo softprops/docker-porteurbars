@@ -4,6 +4,7 @@ import com.github.jknack.handlebars.{
   Context, Handlebars, Template => HandlebarsTemplate, ValueResolver
 }
 import com.github.jknack.handlebars.io.FileTemplateLoader
+import fixiegrips.{ Json4sResolver, ScalaResolver }
 import org.json4s.{ JArray, JValue }
 import org.json4s.native.JsonMethods._
 import scala.concurrent.{ Future, ExecutionContext }
